@@ -31,6 +31,7 @@
 
 
 <h4>Аргументы программы:</h4> <br>
+
 ```bash
 ./TestExc -h
 Allowed options:
@@ -38,14 +39,18 @@ Allowed options:
 -S [ --signals ] arg  Input .csv signal files
 -N [ --noise ] arg    Input .csv noise file
 ```
+
 Каждый входной файла с сигналом обрабатывается в отдельном потоке.
 
 <h4>Зависимости: </h4>
+
 ```bash
 Boost.Program_options (1.58),
 glm(0.9.9.8)
 ```
+
 <h4>Установка с помощью cmake:</h4>
+
 ```cmake
 git clone https://github.com/Biblbrox/TestExc.git
 cd TestExc
