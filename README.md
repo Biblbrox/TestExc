@@ -5,27 +5,27 @@
 на языке Octave с соответствующими графиками для каждой стадии.
 <h3>Работа алгоритма на примере файла "2017-04-11_-_14-06-06_4_raw.csv":</h3>
 <h5>Сырые данные с двух каналов:</h5>
-![plot1.png](res/1.png)
+![plot1.png](./res/1.png)
 <h5>Результат удаления шума:</h5>
-![plot2.png](res/2.png)
+![plot2.png](./res/2.png)
 <h5>Результат удаления нулевой дорожки:</h5>
-![plot3.png](res/3.png)
+![plot3.png](./res/3.png)
 <h5>Результат инвертирования каналов:</h5>
-![plot4.png](res/4.png)
+![plot4.png](./res/4.png)
 <h5>Результат инвертирования каналов:</h5>
-![plot5.png](res/5.png)
+![plot5.png](./res/5.png)
 <h5>После нормирования каналов:</h5>
-![plot6.png](res/6.png)
+![plot6.png](./res/6.png)
 <h5>Результат применения медианного фильтра с окном в 3 элемента:</h5>
-![plot7.png](res/7.png)
+![plot7.png](./res/7.png)
 <h5>Конечный результат:</h5>
-![plot8.png](res/8.png)
+![plot8.png](./res/8.png)
 
 <h4>Процесс работы алгоритма</h4>
-![screen.gif](res/screen.gif)
+![screen.gif](./res/screen.gif)
 
 <h4>Аргументы программы:</h4>
-```
+```bash
 ./TestExc -h
 Allowed options:
 -h [ --help ]         produce help message
@@ -35,13 +35,13 @@ Allowed options:
 Каждый входной файла с сигналом обрабатывается в отдельном потоке.
 
 <h4>Зависимости: </h4>
-```
+```bash
 Boost.Program_options (1.58),
 glm(0.9.9.8)
 ```
 <h4>Установка с помощью cmake:</h4>
-```
-cmake git clone Вставить название 
+```cmake
+git clone Вставить название 
 cd TestExc
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
