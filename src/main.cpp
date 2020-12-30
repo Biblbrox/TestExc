@@ -82,7 +82,7 @@ std::vector<glm::vec2> median_filter(const std::vector<glm::vec2>& lines)
 {
     std::vector<glm::vec2> elements = lines;
 
-    // Add extra elements
+    // Добавление дополнительных элементов
     elements.emplace(elements.begin(), *elements.begin());
     elements.push_back(elements.back());
 
@@ -91,7 +91,7 @@ std::vector<glm::vec2> median_filter(const std::vector<glm::vec2>& lines)
         std::vector<glm::vec2> window = {elements[i - 1], elements[i],
                                          elements[i + 1]};
         window = sig::sort_pairs(window);
-        filtered.push_back(window[1]); // Center element
+        filtered.push_back(window[1]); // Медиана
     }
 
     return filtered;
@@ -108,7 +108,7 @@ std::vector<double> process_chunk(const std::vector<std::string>& lines,
 {
     auto signal_lines = sig::parse_lines(lines);
 
-    // Инвертировать и нормировать x
+    // Инвертировать и нормировать
     std::for_each(signal_lines.begin(), signal_lines.end(),
                   [signal_min](glm::vec2& line) {
                       line -= signal_min;
@@ -118,10 +118,6 @@ std::vector<double> process_chunk(const std::vector<std::string>& lines,
     sig::rescale(signal_lines, 0, lines_tot_count, 0, 12000);
 
     // Применение медианного фильтра
-    // Добавлерие "лишних" элементов
-    signal_lines.emplace(signal_lines.begin(), *signal_lines.begin());
-    signal_lines.push_back(signal_lines.back());
-
     std::vector<glm::vec2> filtered = median_filter(signal_lines);
 
     std::vector<double> result;
