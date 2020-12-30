@@ -55,7 +55,7 @@ t = linspace(0, 12000, length(data));
 data = (data - min(x)) ./ (max(x) - min(x)) .* (12000 - 0) + 0;
 	
 figure(6);
-plot(data);
+plot(t, data);
 grid on;
 title("После нормирования сигнала по расстоянию");
 saveas(6, "6.png")
@@ -70,7 +70,7 @@ for i = [2:length(cor_data) - 1]
 endfor;
 
 figure(7);
-plot(data);
+plot(t, data);
 grid on;
 title("После применения медианного фильтра");
 saveas(7, "7.png")

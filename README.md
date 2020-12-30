@@ -16,10 +16,10 @@
 <h5>Результат инвертирования каналов:</h5>
 
 ![plot4.png](res/4.png)
-<h5>Результат инвертирования каналов:</h5>
+<h5>Результат нормирования каналов:</h5>
 
 ![plot5.png](res/5.png)
-<h5>После нормирования каналов:</h5>
+<h5>После нормирования каналов по расстоянию:</h5>
 
 ![plot6.png](res/6.png)
 <h5>Результат применения медианного фильтра с окном в 3 элемента:</h5>
@@ -47,7 +47,7 @@ glm(0.9.9.8)
 ```
 <h4>Установка с помощью cmake:</h4>
 ```cmake
-git clone Вставить название 
+git clone https://github.com/Biblbrox/TestExc.git
 cd TestExc
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
