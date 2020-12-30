@@ -12,6 +12,7 @@
 
 namespace po = boost::program_options;
 
+// Путь к ресурсам
 const std::string res_path = "../res/";
 
 const int buffer_size = 256;
@@ -19,6 +20,12 @@ const int buffer_size = 256;
 std::mutex mutex;
 std::vector<std::exception_ptr> exceptions;
 
+/**
+ * Удаление шума, нулевой дорожки и инвертирование сигнала
+ * @param signal_file
+ * @param noise_file
+ * @param out_file
+ */
 void preprocess_signal(const std::string& signal_file,
                        const std::string& noise_file,
                        const std::string& out_file)
@@ -66,6 +73,11 @@ void preprocess_signal(const std::string& signal_file,
     out.close();
 }
 
+/**
+ * Медианный фильтр с окном в 3 элемента
+ * @param lines
+ * @return
+ */
 std::vector<glm::vec2> median_filter(const std::vector<glm::vec2>& lines)
 {
     std::vector<glm::vec2> elements = lines;
@@ -86,8 +98,8 @@ std::vector<glm::vec2> median_filter(const std::vector<glm::vec2>& lines)
 }
 
 /**
- * Process chunk of 2-channel signal
- * @param lines
+ * Обработка части сигнала
+ * @param lines - строки с двумя каналами
  * @return
  */
 std::vector<double> process_chunk(const std::vector<std::string>& lines,
@@ -96,19 +108,17 @@ std::vector<double> process_chunk(const std::vector<std::string>& lines,
 {
     auto signal_lines = sig::parse_lines(lines);
 
-    // 3. Invert signal and normalize
+    // Инвертировать и нормировать x
     std::for_each(signal_lines.begin(), signal_lines.end(),
                   [signal_min](glm::vec2& line) {
                       line -= signal_min;
                   });
 
-    // 4. Normalize by distance 12km
+    // Нормировать по расстоянию
     sig::rescale(signal_lines, 0, lines_tot_count, 0, 12000);
 
-    // 5. Filter signal by median filtration
-    const int window_size = 3;
-
-    // Add extra elements
+    // Применение медианного фильтра
+    // Добавлерие "лишних" элементов
     signal_lines.emplace(signal_lines.begin(), *signal_lines.begin());
     signal_lines.push_back(signal_lines.back());
 
@@ -122,11 +132,19 @@ std::vector<double> process_chunk(const std::vector<std::string>& lines,
     return result;
 }
 
+
+/**
+ *
+ * @param signal_raw - Путь к "сырому" файлу
+ * @param signal_file - Путь к промежуточному файлу
+ * @param res_file  - Путь к файлу с конеченым результатом
+ * @param noise_file - Путь к файлу с шумами
+ */
 void process_file(const std::string& signal_raw, const std::string& signal_file,
                   const std::string& res_file, const std::string& noise_file)
 {
     try {
-        // Remove noise, inverse and shrink
+        // Удаление шума нулевой дорожки и  инвертирование
         preprocess_signal(signal_raw, noise_file, signal_file);
 
         std::ifstream signal(signal_file);
@@ -169,7 +187,8 @@ int main(int argc, char* argv[])
     std::vector<std::string> signal_files;
     std::string noise_file;
     try {
-        po::parsed_options parsed = po::command_line_parser(argc, argv).options(options).allow_unregistered().run();
+        po::parsed_options parsed =
+                po::command_line_parser(argc, argv).options(options).allow_unregistered().run();
         po::store(parsed, vm);
         po::notify(vm);
 
@@ -203,6 +222,7 @@ int main(int argc, char* argv[])
         result_path.push_back(res_path + "res" + std::to_string(i) + ".csv");
 
     std::vector<std::thread> threads;
+    // Запуск потоков
     for (size_t i = 0; i < signal_path.size(); ++i)
         threads.emplace_back(process_file, signal_raw[i], signal_path[i],
                              result_path[i], noise_path);
@@ -210,9 +230,11 @@ int main(int argc, char* argv[])
     for (auto& thr: threads)
         thr.join();
 
+    // Т.к. исключения могут броситься в другом потоку
+    // необходимо хранить их в отдельном месте
     for (auto& e: exceptions) {
         try {
-            if (e != nullptr)
+            if (e)
                 std::rethrow_exception(e);
         } catch (const std::exception& e) {
             std::cerr << "Error occured: " << e.what() << std::endl;

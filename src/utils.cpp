@@ -7,6 +7,12 @@
 
 #include "../include/utils.hpp"
 
+/**
+ * Читает n строк
+ * @param file
+ * @param n
+ * @return
+ */
 std::vector<std::string>
 sig::get_lines(std::ifstream& file, int64_t n)
 {
@@ -26,6 +32,11 @@ sig::get_lines(std::ifstream& file, int64_t n)
     return lines;
 }
 
+/**
+ * Возвращает вектор с численными значениями каналов
+ * @param lines
+ * @return
+ */
 std::vector<glm::vec2>
 sig::parse_lines(const std::vector<std::string>& lines)
 {
@@ -51,7 +62,7 @@ sig::parse_lines(const std::vector<std::string>& lines)
 }
 
 /**
- * Return vec4(min_par, max_par, min_per, max_per) values of signal
+ * Возвращает vec4(min_par, max_par, min_per, max_per) значения сигнала
  * @param file_name
  * @return
  */
@@ -97,6 +108,14 @@ glm::vec4 sig::find_min_max(const std::string& file_name)
     return {min_par, max_par, min_per, max_per};
 }
 
+/**
+ * Нормирование сигнала на новый диапазон
+ * @param signal
+ * @param old_min
+ * @param old_max
+ * @param new_min
+ * @param new_max
+ */
 void sig::rescale(std::vector<glm::vec2>& signal,
                   int old_min, int old_max,
                   int new_min, int new_max)
@@ -113,18 +132,20 @@ void sig::rescale(std::vector<glm::vec2>& signal,
     }
 }
 
+/**
+ * Независимая сортировка каналов
+ * @param pairs
+ * @return
+ */
 std::vector<glm::vec2>
 sig::sort_pairs(const std::vector<glm::vec2>& pairs)
 {
-    std::vector<double> channel1;
-    std::vector<double> channel2;
-
     std::vector<int> indicies1(pairs.size());
     std::vector<int> indicies2(pairs.size());
     std::iota(indicies1.begin(), indicies1.end(), 0);
     std::iota(indicies2.begin(), indicies2.end(), 0);
 
-    // Sort indices instead elements
+    // Сортировка индексов вместо элементов
     std::stable_sort(indicies1.begin(), indicies1.end(),
                      [&pairs](size_t i, size_t j){ return pairs[i][0] < pairs[j][0]; });
     std::stable_sort(indicies2.begin(), indicies2.end(),
