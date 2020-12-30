@@ -108,13 +108,13 @@ std::vector<double> process_chunk(const std::vector<std::string>& lines,
 {
     auto signal_lines = sig::parse_lines(lines);
 
-    // Инвертировать и нормировать
+    // Нормирование
     std::for_each(signal_lines.begin(), signal_lines.end(),
                   [signal_min](glm::vec2& line) {
                       line -= signal_min;
                   });
 
-    // Нормировать по расстоянию
+    // Нормирование по расстоянию
     sig::rescale(signal_lines, 0, lines_tot_count, 0, 12000);
 
     // Применение медианного фильтра
